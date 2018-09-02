@@ -8,11 +8,12 @@ package main
 
 import "golang.org/x/tour/pic"
 
+// Pic computes and returns a dx*dy bitmap.
 func Pic(dx, dy int) [][]uint8 {
-	p := make([][]uint8, dy)
+	p := make([][]uint8, dy)         // make space for dy lines
 	for y := range p {
-		p[y] = make([]uint8, dx)
-		for x := range p[y] {
+		p[y] = make([]uint8, dx) // make space for one line with dx columns 
+		for x := range p[y] {    // fill the line with (blue) color levels 
 			p[y][x] = uint8(x ^ y - y ^ x)
 		}
 	}
