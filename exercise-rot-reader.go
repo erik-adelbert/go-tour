@@ -17,7 +17,7 @@ type rot13Reader struct {
 }
 
 func rot13(c byte) byte {
-	σ := map[byte]byte{ // ROT13 permutation is not so big
+	σ := map[byte]byte { // ROT13 permutation is not so big
 		'A': 'N', 'B': 'O', 'C': 'P', 'D': 'Q',
 		'E': 'R', 'F': 'S', 'G': 'T', 'H': 'U',
 		'I': 'V', 'J': 'W', 'K': 'X', 'L': 'Y',
