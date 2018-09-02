@@ -78,7 +78,7 @@ func concurrentCrawl(url string, depth int, fetcher Fetcher, cache *Cache, group
 		return
 	}
 
-	body, urls, err := fetcher.Fetch(url)
+	body, urls, err := fetcher.Fetch(url) // Fetch fake news.
 	if err != nil {
 		fmt.Println(err)
 		return
