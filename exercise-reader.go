@@ -10,9 +10,11 @@ import "golang.org/x/tour/reader"
 
 type MyReader struct{}
 
+// MyReader.Read returns an infinite stream of 'A'.
+// It does so len(b) bytes at a time.
 func (r MyReader) Read(b []byte) (int, error) {
 	for i := range b {
-		b[i] = 'A'
+		b[i] = 'A' // fill b with as many 'A' as possible.
 	}
 	return len(b), nil
 }
