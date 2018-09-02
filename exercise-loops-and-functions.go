@@ -11,12 +11,13 @@ import (
 	"math"
 )
 
-const ε = 1e-10
-
+// Sqrt finds the square-root of x, to a precision ε,
+// using Newton's method.
 func Sqrt(x float64) float64 {
-	r, δ := x, float64(1)
+	const ε = 1e-10
+	r := float64(1)
 
-	for math.Abs(δ) > ε {
+	for δ := x; math.Abs(δ) > ε; {
 		δ = (r*r - x) / (2 * r)
 		r -= δ
 	}
@@ -24,6 +25,8 @@ func Sqrt(x float64) float64 {
 	return r
 }
 
+
+// main compares math.Sqrt() and Sqrt().
 func main() {
 	x := float64(3)
 	fmt.Println(Sqrt(x) - math.Sqrt(x))
