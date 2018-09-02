@@ -17,7 +17,7 @@ func Sqrt(x float64) float64 {
 	const ε = 1e-10
 	r := float64(1)
 
-	for δ := x; math.Abs(δ) > ε; {
+	for δ := x; math.Abs(δ) > ε; { // while variation is bigger than precision!
 		δ = (r*r - x) / (2 * r)
 		r -= δ
 	}
