@@ -25,7 +25,6 @@ func Sqrt(x float64) float64 {
 	return r
 }
 
-
 // main compares math.Sqrt() and Sqrt().
 func main() {
 	x := float64(3)
