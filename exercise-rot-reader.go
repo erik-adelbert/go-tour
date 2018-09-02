@@ -16,7 +16,7 @@ type rot13Reader struct {
 	r io.Reader
 }
 
-func rotn(b, c byte) byte {
+func rotn(n, c byte) byte {
 	var a, z byte
 
 	switch {
@@ -27,7 +27,7 @@ func rotn(b, c byte) byte {
 	default:
 		return c
 	}
-	return a + (c-a+b)%(1+z-a)
+	return a + (c-a+n)%(1+z-a)
 }
 
 func (m rot13Reader) Read(b []byte) (int, error) {
