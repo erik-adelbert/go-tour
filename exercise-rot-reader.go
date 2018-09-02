@@ -16,26 +16,35 @@ type rot13Reader struct {
 	r io.Reader
 }
 
-func rotn(n, c byte) byte {
-	var a, z byte
-
-	switch {
-	case 'a' <= c && c <= 'z':
-		a, z = 'a', 'z'
-	case 'A' <= c && c <= 'Z':
-		a, z = 'A', 'Z'
-	default:
-		return c
+func rot13(c byte) byte {
+	σ := map[byte]byte{ // ROT13 permutation is not so big
+		'A': 'N', 'B': 'O', 'C': 'P', 'D': 'Q',
+		'E': 'R', 'F': 'S', 'G': 'T', 'H': 'U',
+		'I': 'V', 'J': 'W', 'K': 'X', 'L': 'Y',
+		'M': 'Z', 'N': 'A', 'O': 'B', 'P': 'C',
+		'Q': 'D', 'R': 'E', 'S': 'F', 'T': 'G',
+		'U': 'H', 'V': 'I', 'W': 'J', 'X': 'K',
+		'Y': 'L', 'Z': 'M', 'a': 'n', 'b': 'o',
+		'c': 'p', 'd': 'q', 'e': 'r', 'f': 's',
+		'g': 't', 'h': 'u', 'i': 'v', 'j': 'w',
+		'k': 'x', 'l': 'y', 'm': 'z', 'n': 'a',
+		'o': 'b', 'p': 'c', 'q': 'd', 'r': 'e',
+		's': 'f', 't': 'g', 'u': 'h', 'v': 'i',
+		'w': 'j', 'x': 'k', 'y': 'l', 'z': 'm',
 	}
-	return a + (c-a+n)%(1+z-a)
+
+	if r, ok := σ[c]; ok {
+		return r
+	}
+
+	return c
 }
 
 func (m rot13Reader) Read(b []byte) (n int, err error) {
-	n, err = m.r.Read(b)
 
-	if err == nil {
+	if n, err = m.r.Read(b); err == nil {
 		for i, v := range b {
-			b[i] = rotn(13, v)
+			b[i] = rot13(v)
 		}
 	}
 
