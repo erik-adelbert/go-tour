@@ -12,7 +12,7 @@ import "golang.org/x/tour/pic"
 func Pic(dx, dy int) [][]uint8 {
 	p := make([][]uint8, dy)         // make space for dy lines
 	for y := range p {
-		p[y] = make([]uint8, dx) // make space for one line with dx columns 
+		p[y] = make([]uint8, dx) // make dx columns 
 		for x := range p[y] {    // fill the line with (blue) color levels 
 			p[y][x] = uint8(x ^ y - y ^ x)
 		}
