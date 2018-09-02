@@ -30,8 +30,8 @@ func rotn(n, c byte) byte {
 	return a + (c-a+n)%(1+z-a)
 }
 
-func (m rot13Reader) Read(b []byte) (int, error) {
-	n, err := m.r.Read(b)
+func (m rot13Reader) Read(b []byte) (n int, err error) {
+	n, err = m.r.Read(b)
 
 	if err == nil {
 		for i, v := range b {
@@ -39,7 +39,7 @@ func (m rot13Reader) Read(b []byte) (int, error) {
 		}
 	}
 
-	return n, err
+	return
 }
 
 func main() {
