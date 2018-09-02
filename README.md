@@ -1,5 +1,5 @@
 # go-tour
-MyTour of Go
+My Tour of Go
 
 A Tour of Go is an introduction to the Go programming language.
 
