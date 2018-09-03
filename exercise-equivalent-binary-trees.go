@@ -12,7 +12,7 @@ import (
 )
 
 // dfs is a canonical depth first search of tree t.
-// it sends all values to the channel ch.
+// It sends all values to the channel ch.
 func dfs(t *tree.Tree, ch, quit chan int) {
 	if t == nil {
 		return
@@ -28,15 +28,13 @@ func dfs(t *tree.Tree, ch, quit chan int) {
 	dfs(t.Right, ch, quit)
 }
 
-// Walk walks the tree t sending all values
-// to the channel ch.
+// Walk walks the tree t sending all values to the channel ch.
 func Walk(t *tree.Tree, ch, quit chan int) {
 	dfs(t, ch, quit)
 	close(ch)
 }
 
-// Same determines whether the trees
-// t1 and t2 contain the same values.
+// Same determines whether the trees t1 and t2 contain the same values.
 func Same(t1, t2 *tree.Tree) bool {
 	c1, c2 := make(chan int), make(chan int)
 	quit := make(chan int)
