@@ -16,8 +16,12 @@ type rot13Reader struct {
 	r io.Reader
 }
 
+// rot13 encodes/decodes a single byte at a time.
+// As ROT13 permutation is not so big, it implements a lookup table.
 func rot13(c byte) byte {
-	σ := map[byte]byte { // ROT13 permutation is not so big
+	
+	//ROT13 permutation (σ) is not so big.
+	σ := map[byte]byte {
 		'A': 'N', 'B': 'O', 'C': 'P', 'D': 'Q',
 		'E': 'R', 'F': 'S', 'G': 'T', 'H': 'U',
 		'I': 'V', 'J': 'W', 'K': 'X', 'L': 'Y',
