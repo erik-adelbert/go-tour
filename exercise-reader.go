@@ -13,8 +13,10 @@ type MyReader struct{}
 // MyReader.Read returns an infinite stream of 'A'.
 // It does so len(b) bytes at a time.
 func (r MyReader) Read(b []byte) (int, error) {
+	
+	//The core loop fills b witnas many 'A' as possible.
 	for i := range b {
-		b[i] = 'A' // fill b with as many 'A' as possible.
+		b[i] = 'A'
 	}
 	return len(b), nil
 }
