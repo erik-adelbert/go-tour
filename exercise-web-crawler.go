@@ -18,10 +18,10 @@ type Fetcher interface {
 	Fetch(url string) (body string, urls []string, err error)
 }
 
+// Cache safely keeps track of requested and fetched urls preventing
+// multiple downloads. If an url (key) is present with a false boolean
+// value, it hasn't been fetched.
 type Cache struct {
-	// Cache safely keeps track of requested and fetched urls preventing
-	// multiple downloads. If an url (key) is present with a false boolean
-	// value, it hasn't been fetched.
 	v map[string]bool
 	m sync.Mutex
 }
