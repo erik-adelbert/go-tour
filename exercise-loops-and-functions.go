@@ -11,13 +11,13 @@ import (
 	"math"
 )
 
-// Sqrt finds the square-root of x, to a precision ε,
-// using Newton's method.
+// Sqrt finds the square-root of x, to a precision ε, using Newton's method.
 func Sqrt(x float64) float64 {
 	const ε = 1e-10
 	r := float64(1)
 
-	for δ := x; math.Abs(δ) > ε; { // while variation is bigger than precision!
+	// The core loops runs while variation is bigger than precision!
+	for δ := x; math.Abs(δ) > ε; { 
 		δ = (r*r - x) / (2 * r)
 		r -= δ
 	}
