@@ -49,12 +49,11 @@ func (c *Cache) Fetched(u string) bool {
 	c.m.Lock()
 	defer c.m.Unlock()
 
-	if _, ok := c.v[u]; ok {
+	_, ok := c.v[u]
+	if ok {
 		c.v[u] = true
-		return true
 	}
-
-	return false
+	return ok
 }
 
 // Cache.IsFetched safely returns if the given url has been fetched.
