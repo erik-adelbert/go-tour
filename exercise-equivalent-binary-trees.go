@@ -11,37 +11,41 @@ import (
 	"golang.org/x/tour/tree"
 )
 
-// dfs is a canonical depth first search of tree t.
+// Walker search the tree t sending all values to channel ch.
+func Walker(t *tree.Tree, quit chan int) <-chan int {
+	ch := make(chan int)
+	go func() {
+		walk(t, ch, quit)
+		close(ch)
+	}()
+	return ch
+}
+
+// walk is a canonical depth first search of tree t.
 // It sends all values to the channel ch.
-func dfs(t *tree.Tree, ch, quit chan int) {
+func walk(t *tree.Tree, ch, quit chan int) {
 	if t == nil {
 		return
 	}
-
-	dfs(t.Left, ch, quit) // smaller values first
+	
+	walk(t.Left, ch, quit) // smaller values first
 	select {
 	case ch <- t.Value:
 		// nothing more, value sent
 	case <-quit:
 		return
 	}
-	dfs(t.Right, ch, quit)
-}
-
-// Walk walks the tree t sending all values to the channel ch.
-func Walk(t *tree.Tree, ch, quit chan int) {
-	dfs(t, ch, quit)
-	close(ch)
+	walk(t.Right, ch, quit)
+	
 }
 
 // Same determines whether the trees t1 and t2 contain the same values.
 func Same(t1, t2 *tree.Tree) bool {
-	c1, c2 := make(chan int), make(chan int)
 	quit := make(chan int)
 	defer close(quit)
 
-	go Walk(t1, c1, quit)
-	go Walk(t2, c2, quit)
+	c1 := Walker(t1, quit)
+	c2 := Walker(t2, quit)
 
 	for {
 		v1, ok1 := <-c1
@@ -55,6 +59,8 @@ func Same(t1, t2 *tree.Tree) bool {
 			return false
 		}
 	}
+	
+	return false
 }
 
 func main() {
