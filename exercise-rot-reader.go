@@ -37,8 +37,8 @@ func rot13(c byte) byte {
 		'w': 'j', 'x': 'k', 'y': 'l', 'z': 'm',
 	}
 
-	if _, ok := σ[c]; ok {
-		return σ[c]
+	if v, ok := σ[c]; ok {
+		return v
 	}
 
 	return c
