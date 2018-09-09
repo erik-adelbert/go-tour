@@ -97,10 +97,10 @@ func concurrentCrawl(url string, depth int, fetcher Fetcher, cache *Cache, group
 	return
 }
 
-// Crawl uses fetcher to crawl pages starting with url, to a maximum of depth.
+// Crawler uses fetcher to crawl pages starting with url, to a maximum of depth.
 // It spawns as many concurrent crawlers as needed and waits for their completion
 // in a WaitGroup. The cache garantees that each url is only fetched once.
-func Crawl(url string, depth int, fetcher Fetcher) {
+func Crawler(url string, depth int, fetcher Fetcher) {
 	group := &sync.WaitGroup{}
 	cache := &Cache{v: map[string]bool{}}
 
@@ -114,9 +114,9 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 
 func main() {
 	start := time.Now()
-
-	Crawl("https://golang.org/", 4, fetcher)
-
+	
+	Crawler("https://golang.org/", 4, fetcher)
+	
 	elapsed := time.Since(start)
 	fmt.Println("Crawl took ", elapsed)
 
