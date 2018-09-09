@@ -36,7 +36,6 @@ func walk(t *tree.Tree, ch, quit chan int) {
 		return
 	}
 	walk(t.Right, ch, quit)
-	
 }
 
 // Same determines whether the trees t1 and t2 contain the same values.
