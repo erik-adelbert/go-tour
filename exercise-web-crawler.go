@@ -26,7 +26,22 @@ type Cache struct {
 	m sync.Mutex
 }
 
-// Cache.IsCached safely returns if the given url is in the cache.
+// Crawler uses fetcher to crawl pages starting with url, to a maximum of depth.
+// It spawns as many concurrent crawlers as needed and waits for their completion
+// in a WaitGroup. The cache garantees that each url is only fetched once.
+func Crawler(url string, depth int, fetcher Fetcher) {
+	group := &sync.WaitGroup{}
+	cache := &Cache{v: map[string]bool{}}
+
+	cache.Add(url) // update cache.
+	group.Add(1)   // register in the group.
+	go crawl(url, depth, fetcher, cache, group)
+	group.Wait() // wait here for completion of all the spawned crawlers.
+
+	return
+}
+
+// Cache().IsCached safely returns if the given url is in the cache.
 func (c *Cache) IsCached(u string) bool {
 	c.m.Lock()
 	defer c.m.Unlock()
@@ -36,7 +51,7 @@ func (c *Cache) IsCached(u string) bool {
 	return ok
 }
 
-// Cache.Add safely caches the given url.
+// Cache().Add safely caches the given url.
 func (c *Cache) Add(u string) {
 	c.m.Lock()
 	defer c.m.Unlock()
@@ -44,8 +59,8 @@ func (c *Cache) Add(u string) {
 	c.v[u] = false // u is a key to c.v
 }
 
-// Cache.Fetched safely marks an url as fetched.
-func (c *Cache) Fetched(u string) bool {
+// Cache().Mark safely marks the given url as fetched.
+func (c *Cache) Mark(u string) bool {
 	c.m.Lock()
 	defer c.m.Unlock()
 
@@ -56,21 +71,9 @@ func (c *Cache) Fetched(u string) bool {
 	return ok
 }
 
-// Cache.IsFetched safely returns if the given url has been fetched.
-func (c *Cache) IsFetched(u string) bool {
-	c.m.Lock()
-	defer c.m.Unlock()
-
-	if v, ok := c.v[u]; ok {
-		return v
-	}
-
-	return false
-}
-
-// concurrentCrawl recursively spawns itself into more concurrent crawlers.
-// All crawlers register in a WaitGroup.
-func concurrentCrawl(url string, depth int, fetcher Fetcher, cache *Cache, group *sync.WaitGroup) {
+// crawl recursively spawns itself into more concurrent crawls.
+// All crawls register in a WaitGroup.
+func crawl(url string, depth int, fetcher Fetcher, cache *Cache, group *sync.WaitGroup) {
 	defer group.Done() // handy! Code returns in various places.
 
 	if depth <= 0 {
@@ -82,32 +85,17 @@ func concurrentCrawl(url string, depth int, fetcher Fetcher, cache *Cache, group
 		fmt.Println(err)
 		return
 	}
-	cache.Fetched(url) // update cache status.
+	cache.Mark(url) // update cache status.
 	fmt.Printf("found: %s %q\n", url, body)
 
 	for _, u := range urls { // spawn one crawler per url.
 		if !cache.IsCached(u) {
 			cache.Add(u) // update cache.
 			group.Add(1) // register in the group.
-			go concurrentCrawl(u, depth-1, fetcher, cache, group)
+			go crawl(u, depth-1, fetcher, cache, group)
 			// no waiting here!
 		}
 	}
-
-	return
-}
-
-// Crawler uses fetcher to crawl pages starting with url, to a maximum of depth.
-// It spawns as many concurrent crawlers as needed and waits for their completion
-// in a WaitGroup. The cache garantees that each url is only fetched once.
-func Crawler(url string, depth int, fetcher Fetcher) {
-	group := &sync.WaitGroup{}
-	cache := &Cache{v: map[string]bool{}}
-
-	cache.Add(url) // update cache.
-	group.Add(1)   // register in the group.
-	go concurrentCrawl(url, depth, fetcher, cache, group)
-	group.Wait() // wait here for completion of all the spawned crawlers.
 
 	return
 }
@@ -118,7 +106,7 @@ func main() {
 	Crawler("https://golang.org/", 4, fetcher)
 	
 	elapsed := time.Since(start)
-	fmt.Println("Crawl took ", elapsed)
+	fmt.Println("Crawler took ", elapsed)
 
 	return
 }
