@@ -18,7 +18,7 @@ func Sqrt(x float64) float64 {
 
 	// The core loops runs while variation is bigger than precision!
 	for δ := x; math.Abs(δ) > ε; { 
-		δ = (r*r - x) / (2 * r)
+		δ = (r*r - x) / (2 * r) // δ = f(x)/f'(x)
 		r -= δ
 	}
 
